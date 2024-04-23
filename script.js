@@ -205,3 +205,41 @@ function displayFullName(fullName) {
     // Set the inner HTML of the element to the user's full name
     fullNameElement.textContent = fullName;
 }
+
+// lets show the login form when user clicks on the login link/ if they already have an account
+document.addEventListener('DOMContentLoaded', function() {
+    const registerContainer = document.getElementById('register-container');
+    const loginContainer = document.getElementById('login-container');
+    const showLoginLink = document.getElementById('show-login-link');
+    const showRegisterLink = document.getElementById('show-register-link');
+
+    // Function to toggle visibility of register and login forms
+    function toggleForms() {
+        if (registerContainer.style.display === 'none') {
+            registerContainer.style.display = 'block';
+            loginContainer.style.display = 'none';
+            showLoginLink.textContent = 'Login';
+            showRegisterLink.style.display = 'none'; // Hide register link by default
+        } else {
+            registerContainer.style.display = 'none';
+            loginContainer.style.display = 'block';
+            showLoginLink.textContent = 'Register';
+            showRegisterLink.style.display = 'inline'; // Show register link when displaying login form
+        }
+    }
+
+    // Event listener for the login link
+    showLoginLink.addEventListener('click', function(event) {
+        event.preventDefault(); // Prevent default link behavior
+        toggleForms(); // Toggle visibility of forms
+    });
+
+    // Event listener for the register link
+    showRegisterLink.addEventListener('click', function(event) {
+        event.preventDefault(); // Prevent default link behavior
+        toggleForms(); // Toggle visibility of forms
+    });
+
+    // Check initial state and update link text
+    toggleForms();
+});
