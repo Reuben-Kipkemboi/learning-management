@@ -3,7 +3,8 @@ const express = require('express');
 const session = require('express-session');
 const bcrypt = require('bcryptjs');
 const bodyParser = require('body-parser');
-const mysql = require('mysql');
+// changed mysql to mysql2 due to authentication protocol errors
+const mysql = require('mysql2');
 const { check, validationResult } = require('express-validator');
 const app = express();
 
@@ -18,8 +19,8 @@ app.use(session({
 const connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',
-    password: '',
-    database: 'learning_management'
+    password: 'moringa2023',
+    database: 'lms'
 });
 
 // Connect to MySQL
