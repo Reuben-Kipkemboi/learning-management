@@ -1,8 +1,12 @@
 // scripts.js
+const registerContainer = document.getElementById('register-container');
+const loginContainer = document.getElementById('login-container');
+
 document.addEventListener('DOMContentLoaded', () => {
     const registerForm = document.getElementById('register-form');
     const loginForm = document.getElementById('login-form');
     const logoutForm = document.getElementById('logout-form');
+    
 
     registerForm.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -20,7 +24,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 body: JSON.stringify({ username, password, email, full_name })
             });
             if (response.ok) {
-                alert('Registration successful');
+                // alert('Registration successful');
+                // register-form.style.display = 'none';
+                registerContainer.style.display = 'none';
+                loginContainer.style.display = 'block';
+                // window.location.href = '/login';
             } else {
                 alert('Registration failed');
             }
@@ -43,7 +51,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 body: JSON.stringify({ username, password })
             });
             if (response.ok) {
-                alert('Login successful');
+                // alert('Login successful');
+                window.location.href = '/dashboard';
             } else {
                 alert('Invalid username or password');
             }
@@ -199,17 +208,18 @@ function fetchFullName() {
         });
 }
 
-function displayFullName(fullName) {
-    // Get the element where the full name will be displayed
-    const fullNameElement = document.getElementById('user-fullname');
-    // Set the inner HTML of the element to the user's full name
-    fullNameElement.textContent = fullName;
-}
+// function displayFullName(fullName) {
+//     // Get the element where the full name will be displayed
+//     const fullNameElement = document.getElementById('user-fullname');
+//     // Set the inner HTML of the element to the user's full name
+//     fullNameElement.textContent = fullName;
+// }
 
 // lets show the login form when user clicks on the login link/ if they already have an account
 document.addEventListener('DOMContentLoaded', function() {
-    const registerContainer = document.getElementById('register-container');
-    const loginContainer = document.getElementById('login-container');
+    // function () {
+    // const registerContainer = document.getElementById('register-container');
+    // const loginContainer = document.getElementById('login-container');
     const showLoginLink = document.getElementById('show-login-link');
     const showRegisterLink = document.getElementById('show-register-link');
 
@@ -242,4 +252,4 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Check initial state and update link text
     toggleForms();
-});
+    });

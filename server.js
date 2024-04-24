@@ -108,6 +108,7 @@ app.post('/register', [
         }
         console.log('Inserted a new user with id ' + results.insertId);
         res.status(201).json(newUser);
+        
       });
 });
 
@@ -128,6 +129,7 @@ app.post('/login', (req, res) => {
                     // Store user in session
                     req.session.user = user;
                     res.send('Login successful');
+                    // res.redirect('/');
                 } else {
                     res.status(401).send('Invalid username or password');
                 }
