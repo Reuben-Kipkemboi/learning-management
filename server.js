@@ -1,12 +1,17 @@
 // server.js
 const express = require('express');
-const session = require('express-session');
+const session = require('express-session'); 
 const bcrypt = require('bcryptjs');
 const bodyParser = require('body-parser');
 // changed mysql to mysql2 due to authentication protocol errors
 const mysql = require('mysql2');
 const { check, validationResult } = require('express-validator');
 const app = express();
+
+// Set EJS as the default view engine
+app.set('view engine', 'ejs');
+
+
 
 // Configure session middleware
 app.use(session({
@@ -108,7 +113,7 @@ app.post('/register', [
         }
         console.log('Inserted a new user with id ' + results.insertId);
         res.status(201).json(newUser);
-        
+        // res.redirect('/login');
       });
 });
 
@@ -122,6 +127,7 @@ app.post('/login', (req, res) => {
             res.status(401).send('Invalid username or password');
         } else {
             const user = results[0];
+            console.log('User:', user);
             // Compare passwords
             bcrypt.compare(password, user.password, (err, isMatch) => {
                 if (err) throw err;
@@ -129,7 +135,6 @@ app.post('/login', (req, res) => {
                     // Store user in session
                     req.session.user = user;
                     res.send('Login successful');
-                    // res.redirect('/');
                 } else {
                     res.status(401).send('Invalid username or password');
                 }
@@ -145,11 +150,39 @@ app.post('/logout', (req, res) => {
 });
 
 //Dashboard route
+// app.get('/dashboard', (req, res) => {
+//     // Assuming you have middleware to handle user authentication and store user information in req.user
+//     const userFullName = req.user.full_name;
+//     res.render('dashboard', { fullName: userFullName });
+// });
+
 app.get('/dashboard', (req, res) => {
-    // Assuming you have middleware to handle user authentication and store user information in req.user
-    const userFullName = req.user.full_name;
-    res.render('dashboard', { fullName: userFullName });
+    // Check if req.session.user is defined and contains full_name property
+    if (req.session.user && req.session.user.full_name) {
+        const userFullName = req.session.user.full_name;
+        // res.render('dashboard', { fullName: userFullName });
+        res.redirect(`/dashboard.html?fullName=${encodeURIComponent(userFullName)}`);
+        
+    } else {
+        // Redirect user to the login page or handle unauthorized access
+        res.redirect('/login'); // Assuming you have a login route
+        // Alternatively, you can send an error response
+        res.status(401).send('Unauthorized');
+    }
 });
+
+// app.get('/dashboard', (req, res) => {
+//     // Check if req.session.user is defined and contains full_name property
+//     if (req.session.user && req.session.user.full_name) {
+//         const userFullName = req.session.user.full_name;
+//         res.render('dashboard', { fullName: userFullName });
+//     } else {
+//         // Redirect user to the login page or handle unauthorized access
+//         res.redirect('/login'); // Assuming you have a login route
+//         // Alternatively, you can send an error response
+//         // res.status(401).send('Unauthorized');
+//     }
+// });
 
 // Route to retrieve course content
 app.get('/course/:id', (req, res) => {
@@ -167,5 +200,5 @@ app.get('/course/:id', (req, res) => {
 // Start server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
+    // console.log(`Server running on port ${PORT}`);
 });
